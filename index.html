@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konversi Bilangan - Bulat & Pecahan</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .tab.active {
+            background-color: white;
+            color: #6a11cb;
+            border-bottom: 3px solid #6a11cb;
+        }
+
+        .tab:hover:not(.active) {
+            background-color: #e9ecef;
+        }
+
+        .tab-content {
+            display: none;
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            border-color: #6a11cb;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(106, 17, 203, 0.2);
+        }
+
+        button {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result-title {
+            margin-bottom: 20px;
+            color: #444;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .calculation-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .calculation-table th {
+            background-color: #f8f9fa;
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 2px solid #e9ecef;
+            color: #495057;
+        }
+
+        .calculation-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .calculation-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .calculation-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .binary-result {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #e8f4fd;
+            border-radius: 8px;
+            border-left: 4px solid #2575fc;
+        }
+
+        .binary-result h3 {
+            margin-bottom: 10px;
+            color: #2575fc;
+        }
+
+        .binary-value {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #6a11cb;
+        }
+
+        .example {
+            background-color: #f0f8ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            border-left: 4px solid #6a11cb;
+        }
+
+        .example h3 {
+            margin-bottom: 15px;
+            color: #6a11cb;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .tab-content {
+                padding: 15px;
+            }
+            
+            .calculation-table {
+                font-size: 0.9rem;
+            }
+            
+            .calculation-table th, .calculation-table td {
+                padding: 8px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Konversi Bilangan - Bulat & Pecahan</h1>
+        <p class="description">Alat untuk menghitung konversi bilangan bulat dan pecahan ke basis lain</p>
+    </header>
+
+    <div class="tabs">
+        <div class="tab active" data-tab="integer">Konversi Bilangan Bulat</div>
+        <div class="tab" data-tab="fraction">Konversi Bilangan Pecahan</div>
+    </div>
+
+    <!-- Tab 1: Konversi Bilangan Bulat -->
+    <div class="tab-content active" id="integer-tab">
+        <section class="input-section">
+            <h2>Konversi Bilangan Bulat</h2>
+            <div class="form-group">
+                <label for="numberInput">Masukkan bilangan bulat yang akan dikonversi:</label>
+                <input type="number" id="numberInput" placeholder="Contoh: 261" min="1" value="261">
+            </div>
+            <div class="form-group">
+                <label for="baseInput">Pilih basis tujuan:</label>
+                <select id="baseInput">
+                    <option value="2">Biner (Basis 2)</option>
+                    <option value="8">Oktal (Basis 8)</option>
+                    <option value="16">Heksadesimal (Basis 16)</option>
+                </select>
+            </div>
+            <button id="calculateBtn">Hitung Konversi</button>
+        </section>
+
+        <section class="result-section">
+            <h2 class="result-title">Hasil Perhitungan</h2>
+            <div id="resultContainer">
+                <p>Masukkan bilangan dan klik tombol "Hitung Konversi" untuk melihat hasilnya.</p>
+            </div>
+        </section>
+
+        <section class="example">
+            <h3>Contoh Perhitungan</h3>
+            <p>Berikut contoh konversi bilangan 261 ke biner (basis 2):</p>
+            <table class="calculation-table">
+                <thead>
+                    <tr>
+                        <th>Pembagian</th>
+                        <th>Hasil Bagi</th>
+                        <th>Sisa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>261 / 2</td>
+                        <td>130</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>130 / 2</td>
+                        <td>65</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>65 / 2</td>
+                        <td>32</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>32 / 2</td>
+                        <td>16</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>16 / 2</td>
+                        <td>8</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>8 / 2</td>
+                        <td>4</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>4 / 2</td>
+                        <td>2</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>2 / 2</td>
+                        <td>1</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>1 / 2</td>
+                        <td>0</td>
+                        <td>1</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="binary-result">
+                <h3>Hasil Konversi</h3>
+                <p>261 dalam biner adalah: <span class="binary-value">100000101</span></p>
+                <p><em>Catatan: Bacalah sisa dari bawah ke atas untuk mendapatkan hasil konversi yang benar.</em></p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Tab 2: Konversi Bilangan Pecahan -->
+    <div class="tab-content" id="fraction-tab">
+        <section class="input-section">
+            <h2>Konversi Bilangan Pecahan</h2>
+            <div class="form-group">
+                <label for="fractionInput">Masukkan bilangan pecahan (0-1):</label>
+                <input type="number" id="fractionInput" placeholder="Contoh: 0.3" min="0" max="1" step="0.001" value="0.3">
+            </div>
+            <div class="form-group">
+                <label for="precisionInput">Jumlah digit biner yang diinginkan:</label>
+                <input type="number" id="precisionInput" placeholder="Contoh: 16" min="1" max="32" value="16">
+            </div>
+            <button id="calculateFractionBtn">Hitung Konversi</button>
+        </section>
+
+        <section class="result-section">
+            <h2 class="result-title">Hasil Perhitungan</h2>
+            <div id="fractionResultContainer">
+                <p>Masukkan bilangan pecahan dan klik tombol "Hitung Konversi" untuk melihat hasilnya.</p>
+            </div>
+        </section>
+
+        <section class="example">
+            <h3>Contoh Perhitungan</h3>
+            <p>Berikut contoh konversi bilangan pecahan 0.3 ke biner:</p>
+            <table class="calculation-table">
+                <thead>
+                    <tr>
+                        <th>Perkalian</th>
+                        <th>Hasil</th>
+                        <th>Lebih</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>0,3 × 2</td>
+                        <td>0,6</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>0,6 × 2</td>
+                        <td>1,2</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>0,2 × 2</td>
+                        <td>0,4</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>0,4 × 2</td>
+                        <td>0,8</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>0,8 × 2</td>
+                        <td>1,6</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>0,6 × 2</td>
+                        <td>1,2</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>0,2 × 2</td>
+                        <td>0,4</td>
+                        <td>0</td>
+                    </tr>
+                    <tr>
+                        <td>0,4 × 2</td>
+                        <td>0,8</td>
+                        <td>0</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="binary-result">
+                <h3>Hasil Konversi</h3>
+                <p>0.3 dalam biner adalah: <span class="binary-value">0.0100110011001100...</span></p>
+                <p><em>Catatan: Bacalah digit biner dari atas ke bawah untuk mendapatkan hasil konversi yang benar.</em></p>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Website Konversi Bilangan &copy; 2023</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab functionality
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    
+                    // Remove active class from all tabs and contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to current tab and content
+                    tab.classList.add('active');
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+            
+            // Integer conversion
+            const calculateBtn = document.getElementById('calculateBtn');
+            const numberInput = document.getElementById('numberInput');
+            const baseInput = document.getElementById('baseInput');
+            const resultContainer = document.getElementById('resultContainer');
+
+            calculateBtn.addEventListener('click', calculateConversion);
+
+            function calculateConversion() {
+                const number = parseInt(numberInput.value);
+                const base = parseInt(baseInput.value);
+                
+                if (isNaN(number) || number < 1) {
+                    resultContainer.innerHTML = '<p style="color: red;">Masukkan bilangan yang valid (bilangan bulat positif).</p>';
+                    return;
+                }
+
+                let currentNumber = number;
+                const steps = [];
+                
+                // Lakukan pembagian berulang hingga hasil bagi menjadi 0
+                while (currentNumber > 0) {
+                    const quotient = Math.floor(currentNumber / base);
+                    const remainder = currentNumber % base;
+                    
+                    steps.push({
+                        dividend: currentNumber,
+                        divisor: base,
+                        quotient: quotient,
+                        remainder: remainder
+                    });
+                    
+                    currentNumber = quotient;
+                }
+                
+                // Tampilkan hasil dalam tabel
+                let resultHTML = `
+                    <table class="calculation-table">
+                        <thead>
+                            <tr>
+                                <th>Pembagian</th>
+                                <th>Hasil Bagi</th>
+                                <th>Sisa</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                steps.forEach(step => {
+                    resultHTML += `
+                        <tr>
+                            <td>${step.dividend} / ${step.divisor}</td>
+                            <td>${step.quotient}</td>
+                            <td>${step.remainder}</td>
+                        </tr>
+                    `;
+                });
+                
+                resultHTML += `</tbody></table>`;
+                
+                // Tampilkan hasil konversi
+                const convertedValue = convertToBase(number, base);
+                const baseNames = {
+                    2: 'biner',
+                    8: 'oktal',
+                    16: 'heksadesimal'
+                };
+                
+                resultHTML += `
+                    <div class="binary-result">
+                        <h3>Hasil Konversi</h3>
+                        <p>${number} dalam ${baseNames[base]} adalah: <span class="binary-value">${convertedValue}</span></p>
+                        <p><em>Catatan: Bacalah sisa dari bawah ke atas untuk mendapatkan hasil konversi yang benar.</em></p>
+                    </div>
+                `;
+                
+                resultContainer.innerHTML = resultHTML;
+            }
+            
+            function convertToBase(number, base) {
+                if (base === 16) {
+                    // Untuk heksadesimal, gunakan fungsi bawaan
+                    return number.toString(16).toUpperCase();
+                } else {
+                    // Untuk basis lain, gunakan fungsi bawaan
+                    return number.toString(base);
+                }
+            }
+            
+            // Fraction conversion
+            const calculateFractionBtn = document.getElementById('calculateFractionBtn');
+            const fractionInput = document.getElementById('fractionInput');
+            const precisionInput = document.getElementById('precisionInput');
+            const fractionResultContainer = document.getElementById('fractionResultContainer');
+
+            calculateFractionBtn.addEventListener('click', calculateFractionConversion);
+
+            function calculateFractionConversion() {
+                const fraction = parseFloat(fractionInput.value);
+                const precision = parseInt(precisionInput.value);
+                
+                if (isNaN(fraction) || fraction < 0 || fraction >= 1) {
+                    fractionResultContainer.innerHTML = '<p style="color: red;">Masukkan bilangan pecahan yang valid (antara 0 dan 1).</p>';
+                    return;
+                }
+                
+                if (isNaN(precision) || precision < 1 || precision > 32) {
+                    fractionResultContainer.innerHTML = '<p style="color: red;">Masukkan jumlah digit yang valid (1-32).</p>';
+                    return;
+                }
+
+                let currentFraction = fraction;
+                const steps = [];
+                let binaryResult = "0.";
+                
+                // Lakukan perkalian berulang hingga mencapai presisi yang diinginkan
+                for (let i = 0; i < precision; i++) {
+                    const product = currentFraction * 2;
+                    const integerPart = Math.floor(product);
+                    const fractionalPart = product - integerPart;
+                    
+                    steps.push({
+                        step: i + 1,
+                        multiplication: `${currentFraction.toFixed(6)} × 2`,
+                        product: product.toFixed(6),
+                        integerPart: integerPart
+                    });
+                    
+                    binaryResult += integerPart;
+                    currentFraction = fractionalPart;
+                    
+                    // Jika fractionalPart menjadi 0, kita bisa berhenti
+                    if (fractionalPart === 0) {
+                        break;
+                    }
+                }
+                
+                // Tampilkan hasil dalam tabel
+                let resultHTML = `
+                    <table class="calculation-table">
+                        <thead>
+                            <tr>
+                                <th>Perkalian</th>
+                                <th>Hasil</th>
+                                <th
