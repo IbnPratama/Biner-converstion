@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Konversi Bilangan - Bulat & Pecahan</title>
+    <title>Konversi Bilangan - Normalisasi IEEE 754</title>
     <style>
         * {
             box-sizing: border-box;
@@ -198,6 +198,34 @@
             color: #6a11cb;
         }
 
+        .normalization-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .normalization-table th, .normalization-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .normalization-table th {
+            background-color: #f8f9fa;
+        }
+
+        .normalization-step {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .normalization-step h4 {
+            margin-bottom: 10px;
+            color: #6a11cb;
+        }
+
         footer {
             text-align: center;
             margin-top: 40px;
@@ -219,11 +247,12 @@
                 padding: 15px;
             }
             
-            .calculation-table {
+            .calculation-table, .normalization-table {
                 font-size: 0.9rem;
             }
             
-            .calculation-table th, .calculation-table td {
+            .calculation-table th, .calculation-table td,
+            .normalization-table th, .normalization-table td {
                 padding: 8px 10px;
             }
         }
@@ -231,13 +260,14 @@
 </head>
 <body>
     <header>
-        <h1>Konversi Bilangan - Bulat & Pecahan</h1>
-        <p class="description">Alat untuk menghitung konversi bilangan bulat dan pecahan ke basis lain</p>
+        <h1>Konversi Bilangan - Normalisasi IEEE 754</h1>
+        <p class="description">Alat untuk menghitung konversi bilangan dan normalisasi floating-point</p>
     </header>
 
     <div class="tabs">
         <div class="tab active" data-tab="integer">Konversi Bilangan Bulat</div>
         <div class="tab" data-tab="fraction">Konversi Bilangan Pecahan</div>
+        <div class="tab" data-tab="normalization">Normalisasi IEEE 754</div>
     </div>
 
     <!-- Tab 1: Konversi Bilangan Bulat -->
@@ -413,6 +443,87 @@
                 <h3>Hasil Konversi</h3>
                 <p>0.3 dalam biner adalah: <span class="binary-value">0.0100110011001100...</span></p>
                 <p><em>Catatan: Bacalah digit biner dari atas ke bawah untuk mendapatkan hasil konversi yang benar.</em></p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Tab 3: Normalisasi IEEE 754 -->
+    <div class="tab-content" id="normalization-tab">
+        <section class="input-section">
+            <h2>Normalisasi IEEE 754</h2>
+            <div class="form-group">
+                <label for="integerPartInput">Masukkan bagian bilangan bulat:</label>
+                <input type="number" id="integerPartInput" placeholder="Contoh: 261" min="1" value="261">
+            </div>
+            <div class="form-group">
+                <label for="fractionPartInput">Masukkan bagian bilangan pecahan (0-1):</label>
+                <input type="number" id="fractionPartInput" placeholder="Contoh: 0.3" min="0" max="1" step="0.001" value="0.3">
+            </div>
+            <div class="form-group">
+                <label for="normalizationPrecision">Jumlah digit pecahan biner:</label>
+                <input type="number" id="normalizationPrecision" placeholder="Contoh: 16" min="1" max="32" value="16">
+            </div>
+            <button id="calculateNormalizationBtn">Hitung Normalisasi</button>
+        </section>
+
+        <section class="result-section">
+            <h2 class="result-title">Hasil Normalisasi</h2>
+            <div id="normalizationResultContainer">
+                <p>Masukkan bilangan bulat dan pecahan, lalu klik tombol "Hitung Normalisasi" untuk melihat hasilnya.</p>
+            </div>
+        </section>
+
+        <section class="example">
+            <h3>Contoh Normalisasi</h3>
+            <p>Berikut contoh normalisasi bilangan 261.3:</p>
+            
+            <div class="normalization-step">
+                <h4>Langkah 1: Konversi ke Biner</h4>
+                <p>261 dalam biner: <span class="binary-value">100000101</span></p>
+                <p>0.3 dalam biner: <span class="binary-value">0.0100110011001100...</span></p>
+                <p>Gabungan: <span class="binary-value">100000101.0100110011001100</span></p>
+            </div>
+            
+            <div class="normalization-step">
+                <h4>Langkah 2: Bentuk Awal (Belum Dinormalisasi)</h4>
+                <table class="normalization-table">
+                    <tr>
+                        <td>1</td>
+                        <td>0000 0101</td>
+                        <td>,</td>
+                        <td>0100 1100 1100 1100</td>
+                        <td>×2<sup>0</sup></td>
+                    </tr>
+                </table>
+                <p>Eksponen = 0 (karena belum digeser)</p>
+            </div>
+            
+            <div class="normalization-step">
+                <h4>Langkah 3: Normalisasi (Geser Koma)</h4>
+                <p>Kita geser koma ke kiri hingga berada tepat di belakang angka 1 pertama:</p>
+                <table class="normalization-table">
+                    <tr>
+                        <td>1,</td>
+                        <td>0000 0101</td>
+                        <td>0100 1100 1100 1100</td>
+                        <td>×2<sup>8</sup></td>
+                    </tr>
+                </table>
+                <p>Eksponen = 8 (karena kita menggeser koma 8 posisi ke kiri)</p>
+            </div>
+            
+            <div class="normalization-step">
+                <h4>Langkah 4: Hasil Akhir (Scientific Notation)</h4>
+                <p>Bilangan yang sudah dinormalisasi:</p>
+                <div class="binary-result">
+                    <p><span class="binary-value">1.000001010100110011001100 × 2<sup>8</sup></span></p>
+                </div>
+                <p>Dalam format IEEE 754 single precision (32-bit):</p>
+                <ul>
+                    <li>Sign bit: 0 (karena positif)</li>
+                    <li>Exponent: 8 + 127 = 135 → dalam biner: 10000111</li>
+                    <li>Mantissa: 00000101010011001100110 (23 bit pertama setelah koma)</li>
+                </ul>
             </div>
         </section>
     </div>
@@ -613,6 +724,153 @@
                 `;
                 
                 fractionResultContainer.innerHTML = resultHTML;
+            }
+            
+            // Normalization
+            const calculateNormalizationBtn = document.getElementById('calculateNormalizationBtn');
+            const integerPartInput = document.getElementById('integerPartInput');
+            const fractionPartInput = document.getElementById('fractionPartInput');
+            const normalizationPrecision = document.getElementById('normalizationPrecision');
+            const normalizationResultContainer = document.getElementById('normalizationResultContainer');
+
+            calculateNormalizationBtn.addEventListener('click', calculateNormalization);
+
+            function calculateNormalization() {
+                const integerPart = parseInt(integerPartInput.value);
+                const fractionPart = parseFloat(fractionPartInput.value);
+                const precision = parseInt(normalizationPrecision.value);
+                
+                if (isNaN(integerPart) || integerPart < 1) {
+                    normalizationResultContainer.innerHTML = '<p style="color: red;">Masukkan bagian bilangan bulat yang valid (bilangan bulat positif).</p>';
+                    return;
+                }
+                
+                if (isNaN(fractionPart) || fractionPart < 0 || fractionPart >= 1) {
+                    normalizationResultContainer.innerHTML = '<p style="color: red;">Masukkan bagian bilangan pecahan yang valid (antara 0 dan 1).</p>';
+                    return;
+                }
+                
+                if (isNaN(precision) || precision < 1 || precision > 32) {
+                    normalizationResultContainer.innerHTML = '<p style="color: red;">Masukkan jumlah digit yang valid (1-32).</p>';
+                    return;
+                }
+
+                // Konversi bagian bulat ke biner
+                let currentInteger = integerPart;
+                let integerBinary = "";
+                
+                while (currentInteger > 0) {
+                    integerBinary = (currentInteger % 2) + integerBinary;
+                    currentInteger = Math.floor(currentInteger / 2);
+                }
+                
+                // Konversi bagian pecahan ke biner
+                let currentFraction = fractionPart;
+                let fractionBinary = "";
+                
+                for (let i = 0; i < precision; i++) {
+                    const product = currentFraction * 2;
+                    const integerPart = Math.floor(product);
+                    fractionBinary += integerPart;
+                    currentFraction = product - integerPart;
+                    
+                    if (currentFraction === 0) {
+                        break;
+                    }
+                }
+                
+                // Gabungkan bagian bulat dan pecahan
+                const fullBinary = integerBinary + '.' + fractionBinary;
+                
+                // Hitung eksponen untuk normalisasi
+                // Eksponen = jumlah digit yang kita geser ke kiri hingga setelah angka 1 pertama
+                const exponent = integerBinary.length - 1;
+                
+                // Bentuk yang sudah dinormalisasi
+                const normalizedBinary = '1.' + integerBinary.substring(1) + fractionBinary;
+                
+                // Tampilkan hasil
+                let resultHTML = `
+                    <div class="normalization-step">
+                        <h4>Langkah 1: Konversi ke Biner</h4>
+                        <p>${integerPart} dalam biner: <span class="binary-value">${integerBinary}</span></p>
+                        <p>${fractionPart} dalam biner: <span class="binary-value">0.${fractionBinary}</span></p>
+                        <p>Gabungan: <span class="binary-value">${fullBinary}</span></p>
+                    </div>
+                    
+                    <div class="normalization-step">
+                        <h4>Langkah 2: Bentuk Awal (Belum Dinormalisasi)</h4>
+                        <table class="normalization-table">
+                            <tr>
+                                <td>${formatBinaryWithSpaces(integerBinary)}</td>
+                                <td>,</td>
+                                <td>${formatBinaryWithSpaces(fractionBinary)}</td>
+                                <td>×2<sup>0</sup></td>
+                            </tr>
+                        </table>
+                        <p>Eksponen = 0 (karena belum digeser)</p>
+                    </div>
+                    
+                    <div class="normalization-step">
+                        <h4>Langkah 3: Normalisasi (Geser Koma)</h4>
+                        <p>Kita geser koma ke kiri hingga berada tepat di belakang angka 1 pertama:</p>
+                        <table class="normalization-table">
+                            <tr>
+                                <td>1,</td>
+                                <td>${formatBinaryWithSpaces(integerBinary.substring(1) + fractionBinary)}</td>
+                                <td>×2<sup>${exponent}</sup></td>
+                            </tr>
+                        </table>
+                        <p>Eksponen = ${exponent} (karena kita menggeser koma ${exponent} posisi ke kiri)</p>
+                    </div>
+                    
+                    <div class="normalization-step">
+                        <h4>Langkah 4: Hasil Akhir (Scientific Notation)</h4>
+                        <p>Bilangan yang sudah dinormalisasi:</p>
+                        <div class="binary-result">
+                            <p><span class="binary-value">${normalizedBinary} × 2<sup>${exponent}</sup></span></p>
+                        </div>
+                `;
+                
+                // Jika ingin menampilkan format IEEE 754
+                if (exponent >= 0) {
+                    const bias = 127;
+                    const exponentValue = exponent + bias;
+                    
+                    // Konversi exponentValue ke biner (8 bit)
+                    let exponentBinary = exponentValue.toString(2);
+                    while (exponentBinary.length < 8) {
+                        exponentBinary = '0' + exponentBinary;
+                    }
+                    
+                    // Mantissa adalah bagian setelah koma (23 bit pertama)
+                    const mantissa = (integerBinary.substring(1) + fractionBinary).substring(0, 23);
+                    
+                    resultHTML += `
+                        <p>Dalam format IEEE 754 single precision (32-bit):</p>
+                        <ul>
+                            <li>Sign bit: 0 (karena positif)</li>
+                            <li>Exponent: ${exponent} + ${bias} = ${exponentValue} → dalam biner: ${exponentBinary}</li>
+                            <li>Mantissa: ${mantissa} (23 bit pertama setelah koma)</li>
+                        </ul>
+                    `;
+                }
+                
+                resultHTML += `</div>`;
+                
+                normalizationResultContainer.innerHTML = resultHTML;
+            }
+            
+            function formatBinaryWithSpaces(binaryString) {
+                // Format biner dengan spasi setiap 4 digit
+                let result = '';
+                for (let i = 0; i < binaryString.length; i++) {
+                    if (i > 0 && i % 4 === 0) {
+                        result += ' ';
+                    }
+                    result += binaryString[i];
+                }
+                return result;
             }
         });
     </script>
