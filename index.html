@@ -585,4 +585,36 @@
                             <tr>
                                 <th>Perkalian</th>
                                 <th>Hasil</th>
-                                <th
+                                <th>Lebih</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                steps.forEach(step => {
+                    resultHTML += `
+                        <tr>
+                            <td>${step.multiplication}</td>
+                            <td>${step.product}</td>
+                            <td>${step.integerPart}</td>
+                        </tr>
+                    `;
+                });
+                
+                resultHTML += `</tbody></table>`;
+                
+                // Tampilkan hasil konversi
+                resultHTML += `
+                    <div class="binary-result">
+                        <h3>Hasil Konversi</h3>
+                        <p>${fraction} dalam biner adalah: <span class="binary-value">${binaryResult}</span></p>
+                        <p><em>Catatan: Bacalah digit biner dari atas ke bawah untuk mendapatkan hasil konversi yang benar.</em></p>
+                    </div>
+                `;
+                
+                fractionResultContainer.innerHTML = resultHTML;
+            }
+        });
+    </script>
+</body>
+</html>
